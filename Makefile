@@ -9,7 +9,7 @@ OU := IT
 DEVDOMAIN := dev.example.com
 SVCDOMAIN := service.example.com
 
-all: ca site dhparam $(DEVDOMAIN).cert $(SVCDOMAIN).cert
+all: ca site dhparam $(DEVDOMAIN).crt $(SVCDOMAIN).crt
 	chmod 600 *.key
 
 clean:
@@ -45,13 +45,13 @@ $(CHAIN_CERT): | $(SITE_CERT)
 	cat $(CA_CERT) $(SITE_CERT)> $(REV_CHAIN_CERT)
 
 $(DEVDOMAIN).crt:
-	sed "s/OU/$OU/;s/FQDN/${DEVDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > /tmp/cert.cnf
-	openssl req -x509 -new -nodes -days 3650 -config /tmp/cert.cnf -out ${DEVDOMAIN}.crt
+	sed "s/OU/$OU/;s/FQDN/${DEVDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > $(SVCDOMAIN).cnf
+	openssl req -x509 -new -nodes -days 3650 -config $(SVCDOMAIN).cnf -out ${DEVDOMAIN}.crt
 	chmod 600 ${DEVDOMAIN}.key
 
 $(SVCDOMAIN).crt:
-	sed "s/OU/$OU/;s/FQDN/${SVCDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > /tmp/cert.cnf
-	openssl req -x509 -new -nodes -days 3650 -config /tmp/cert.cnf -out ${SVCDOMAIN}.crt
+	sed "s/OU/$OU/;s/FQDN/${SVCDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > $(SVCDOMAIN).cnf
+	openssl req -x509 -new -nodes -days 3650 -config $(SVCDOMAIN).cnf -out ${SVCDOMAIN}.crt
 	chmod 600 ${SVCDOMAIN}.key
 	
 $(DHPARAM):
