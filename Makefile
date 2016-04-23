@@ -44,12 +44,12 @@ $(CHAIN_CERT): | $(SITE_CERT)
 	cat $(SITE_CERT) $(CA_CERT) > $(CHAIN_CERT)
 	cat $(CA_CERT) $(SITE_CERT)> $(REV_CHAIN_CERT)
 
-$(DEVDOMAIN).cert:
+$(DEVDOMAIN).crt:
 	sed "s/OU/$OU/;s/FQDN/${DEVDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > /tmp/cert.cnf
 	openssl req -x509 -new -nodes -days 3650 -config /tmp/cert.cnf -out ${DEVDOMAIN}.crt
 	chmod 600 ${DEVDOMAIN}.key
 
-$(SVCDOMAIN).cert:
+$(SVCDOMAIN).crt:
 	sed "s/OU/$OU/;s/FQDN/${SVCDOMAIN}/g;s/EMAIL/${EMAIL}/" cert.cnf.tmpl > /tmp/cert.cnf
 	openssl req -x509 -new -nodes -days 3650 -config /tmp/cert.cnf -out ${SVCDOMAIN}.crt
 	chmod 600 ${SVCDOMAIN}.key
@@ -63,4 +63,4 @@ $(DHPARAM):
 help: 
 	@echo "make [ all | clean | ca | site ]"
 
-.PHONY: all clean ca site idpproxy-somdev idpproxy-somsvc postfix-somdev postfix-somsvc help
+.PHONY: all clean ca site help
